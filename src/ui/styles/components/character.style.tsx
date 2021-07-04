@@ -2,7 +2,7 @@ import tw from "tailwind-styled-components";
 
 export const Container = tw.div`
 	h-full
-	bg-gray-900
+bg-gray-900
 	mt-8
 	p-2
 	rounded-md

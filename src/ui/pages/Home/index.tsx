@@ -2,23 +2,24 @@ import { useState } from "react";
 import {
   Container,
   Header,
+  InfoContainer,
   WatchFavoritesButton,
   Logo,
   SearchInput,
+  ListOfCharacters,
   InfoMessage,
+  HandlePageButton,
+  PaginationContainer,
 } from "ui/styles/pages/home.styles";
 
 import imgLogo from "assets/images/logo.png";
 
 import { CharacterItem } from "ui/components/CharacterItem";
-import { InfiniteScroll } from "ui/components/InfiniteScroll";
 
 import { CharacterType } from "types/CharacterType";
 
 import { useCharacterSearch } from "data/hooks/useCharacterSearch";
 import { useCharacterContext } from "data/hooks/useCharacterContext";
-
-// import { api } from "data/services/api";
 
 export function Home() {
   const { favorites } = useCharacterContext();
@@ -27,10 +28,8 @@ export function Home() {
     [pageNumber, setPageNumber] = useState(1),
     [watchFavorites, setWatchFavorites] = useState(false);
 
-  const { isLoading, characters, hasMore, hasError } = useCharacterSearch(
-    pageNumber,
-    searchedCharacter
-  );
+  const { isLoading, hasError, characters, hasNext, hasPrevious } =
+    useCharacterSearch(pageNumber, searchedCharacter);
 
   function handleSearchCharacter(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchedCharacter(event.target.value);
@@ -39,6 +38,18 @@ export function Home() {
   function handleWatchFavorites() {
     setWatchFavorites(!watchFavorites);
   }
+
+  function handleNextPage() {
+    setPageNumber((currentPage) => currentPage + 1);
+    document.documentElement.scrollTop = 0;
+  }
+
+  function handlePreviusPage() {
+    setPageNumber((currentPage) => currentPage - 1);
+    document.documentElement.scrollTop = 0;
+  }
+
+  console.log(isLoading, hasError);
 
   return (
     <Container>
@@ -54,11 +65,13 @@ export function Home() {
           {watchFavorites ? "Ver todos" : "Meus favoritos"}
         </WatchFavoritesButton>
       </Header>
-      <InfiniteScroll
-        onBottomHit={() => setPageNumber((prevNumber) => prevNumber + 1)}
-        isLoading={isLoading}
-        hasMoreData={hasMore}
-      >
+      <InfoContainer>
+        {isLoading && !hasError && <InfoMessage>Só um segundo</InfoMessage>}
+        {watchFavorites === true && favorites.length === 0 && (
+          <InfoMessage>Nenhum personagem favorito</InfoMessage>
+        )}
+      </InfoContainer>
+      <ListOfCharacters>
         {watchFavorites
           ? favorites.map((favorite: CharacterType) => (
               <CharacterItem
@@ -77,16 +90,25 @@ export function Home() {
                 name={character.name}
                 image={character.image}
                 gender={character.gender}
-                isFavorited={false}
+                isFavorited={favorites.some(
+                  (favorite) => favorite.id === character.id
+                )}
               />
             ))}
-        {watchFavorites === true && favorites.length === 0 && (
-          <InfoMessage>Nenhum selecionado como favorito</InfoMessage>
+      </ListOfCharacters>
+
+      <PaginationContainer>
+        {hasPrevious && !watchFavorites && (
+          <HandlePageButton type="button" onClick={handlePreviusPage}>
+            &lt;
+          </HandlePageButton>
         )}
-        {hasError === false && isLoading && (
-          <InfoMessage>Só um segundo...</InfoMessage>
+        {hasNext && !watchFavorites && (
+          <HandlePageButton type="button" onClick={handleNextPage}>
+            &gt;
+          </HandlePageButton>
         )}
-      </InfiniteScroll>
+      </PaginationContainer>
     </Container>
   );
 }

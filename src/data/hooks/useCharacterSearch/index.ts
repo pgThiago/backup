@@ -1,8 +1,7 @@
-// import { api } from "data/services/api";
 import { useEffect, useState } from "react";
 import { CharacterType } from "types/CharacterType";
 
-import axios, { Canceler } from "axios";
+import axios from "axios";
 
 export function useCharacterSearch(
   pageNumber: number,
@@ -11,13 +10,13 @@ export function useCharacterSearch(
   const [characters, setCharacters] = useState<CharacterType[]>([]),
     [isLoading, setIsLoading] = useState(false),
     [hasError, setHasError] = useState(false),
-    [hasMore, setHasMore] = useState(false);
+    [hasNext, setHasNext] = useState(false),
+    [hasPrevious, setHasPrevious] = useState(false);
   console.log("characters: ", characters);
 
   useEffect(() => {
     setIsLoading(true);
     setHasError(true);
-    let cancel: Canceler;
     axios({
       method: "get",
       url: `https://rickandmortyapi.com/api/character/`,
@@ -25,26 +24,26 @@ export function useCharacterSearch(
         page: pageNumber,
         name: searchedCharacter.toLowerCase().replace(/\s/g, ""),
       },
-      cancelToken: new axios.CancelToken((c: Canceler) => (cancel = c)),
     })
       .then((response) => {
         setCharacters(response.data.results);
+        console.log(response.data);
         setHasError(false);
-        setHasMore(response.data.info.next !== null);
+        setHasNext(response.data.info.next !== null);
+        setHasPrevious(response.data.info.prev !== null);
         setIsLoading(false);
       })
       .catch((error) => {
         setHasError(false);
         if (axios.isCancel(error)) return;
       });
-
-    return () => cancel();
   }, [searchedCharacter, pageNumber]);
 
   return {
     isLoading,
     characters,
     hasError,
-    hasMore,
+    hasNext,
+    hasPrevious,
   };
 }

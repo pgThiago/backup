@@ -1,7 +1,6 @@
 import tw from "tailwind-styled-components";
 
 export const Container = tw.div`
-	w-5/6
 	h-full
 	bg-gray-900
 	mt-8
@@ -14,8 +13,7 @@ export const Container = tw.div`
 export const CharacterPictureContainer = tw.div`
 	flex
 	items-center
-	justify-center
-	
+	justify-center	
 `;
 
 export const CharacterPicture = tw.img`
@@ -53,12 +51,18 @@ text-white
 	text-md
 `;
 
-export const FavoriteButton = tw.button`
-	bg-green-500
+type FavoriteButtonProps = {
+  $isFavorited: boolean;
+};
+
+export const FavoriteButton = tw.button<FavoriteButtonProps>`
+	${({ $isFavorited }) =>
+    $isFavorited
+      ? "bg-red-500 hover:bg-red-900"
+      : "bg-green-500 hover:bg-green-900"}	
 	text-white
 	text-md
 	w-2/5
 	h-2/5
 	mr-2
-	hover:bg-green-900
 `;

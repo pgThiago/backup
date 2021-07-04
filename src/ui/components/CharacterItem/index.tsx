@@ -1,3 +1,4 @@
+import { useCharacterContext } from "data/hooks/useCharacterContext";
 import {
   Container,
   CharacterPicture,
@@ -10,13 +11,21 @@ import {
 } from "ui/styles/components/character.style";
 
 interface CharacterItemProps {
+  id: number;
   name: string;
   image: string;
   gender: string;
+  isFavorited: boolean;
 }
 
-export function CharacterItem({ name, image, gender }: CharacterItemProps) {
-  function handleFavorite() {}
+export function CharacterItem({
+  id,
+  name,
+  image,
+  gender,
+  isFavorited,
+}: CharacterItemProps) {
+  const { handleCreateFavorite, handleDeleteFavorite } = useCharacterContext();
   return (
     <Container>
       <CharacterPictureContainer>
@@ -29,9 +38,30 @@ export function CharacterItem({ name, image, gender }: CharacterItemProps) {
           <Gender>Gênero: {gender}</Gender>
         </NameGenderContainer>
 
-        <FavoriteButton type="button" onClick={handleFavorite}>
-          Favoritar
-        </FavoriteButton>
+        {isFavorited ? (
+          <FavoriteButton
+            $isFavorited
+            type="button"
+            onClick={() => handleDeleteFavorite(id)}
+          >
+            Remover
+          </FavoriteButton>
+        ) : (
+          <FavoriteButton
+            $isFavorited={false}
+            type="button"
+            onClick={() =>
+              handleCreateFavorite({
+                id,
+                name,
+                gender,
+                image,
+              })
+            }
+          >
+            Favoritar
+          </FavoriteButton>
+        )}
       </CharacterDetailsContainer>
     </Container>
   );

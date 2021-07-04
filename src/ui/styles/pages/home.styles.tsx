@@ -6,15 +6,16 @@ export const Container = tw.div`
 	justify-center
 	flex-col
 	w-full
-	h-auto
+	h-full
 	bg-black
+	font-sans
 `;
 
 export const Header = tw.header`flex
 	items-center
 	justify-center
 	flex-col
-	w-full
+	w-4/5	
 `;
 
 export const Logo = tw.img`	
@@ -23,7 +24,9 @@ export const Logo = tw.img`
 
 export const SearchInput = tw.input`
 	my-6
-	w-3/6
+	mx-12
+	w-full
+	md:w-3/6
 	border-0
 	border-b-2
 	focus:outline-none 
@@ -34,11 +37,18 @@ export const SearchInput = tw.input`
 	p-2
 `;
 
-export const Main = tw.main`	
+export const WatchFavoritesButton = tw.button`
+bg-green-500
+	text-white
+	text-md
 	w-full
-	rounded-lg
-	grid
-	grid-cols-3
-	gap-y-8
-	justify-items-center
+	h-10
+	md:w-48
+	hover:bg-green-900
+`;
+
+export const LoadingMessage = tw.span`
+	my-10
+  text-lg
+	text-white
 `;

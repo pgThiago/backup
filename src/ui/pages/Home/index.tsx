@@ -5,7 +5,7 @@ import {
   WatchFavoritesButton,
   Logo,
   SearchInput,
-  LoadingMessage,
+  InfoMessage,
 } from "ui/styles/pages/home.styles";
 
 import imgLogo from "assets/images/logo.png";
@@ -27,7 +27,7 @@ export function Home() {
     [pageNumber, setPageNumber] = useState(1),
     [watchFavorites, setWatchFavorites] = useState(false);
 
-  const { isLoading, hasMore, characters } = useCharacterSearch(
+  const { isLoading, characters, hasMore, hasError } = useCharacterSearch(
     pageNumber,
     searchedCharacter
   );
@@ -81,9 +81,11 @@ export function Home() {
               />
             ))}
         {watchFavorites === true && favorites.length === 0 && (
-          <LoadingMessage>Nenhum selecionado como favorito</LoadingMessage>
+          <InfoMessage>Nenhum selecionado como favorito</InfoMessage>
         )}
-        {isLoading && <LoadingMessage>Só um segundo...</LoadingMessage>}
+        {hasError === false && isLoading && (
+          <InfoMessage>Só um segundo...</InfoMessage>
+        )}
       </InfiniteScroll>
     </Container>
   );

@@ -28,9 +28,7 @@ export function useCharacterSearch(
       cancelToken: new axios.CancelToken((c: Canceler) => (cancel = c)),
     })
       .then((response) => {
-        setCharacters((prevState) => {
-          return [...new Set([...prevState, ...response.data.results])];
-        });
+        setCharacters(response.data.results);
         setHasError(false);
         setHasMore(response.data.info.next !== null);
         setIsLoading(false);

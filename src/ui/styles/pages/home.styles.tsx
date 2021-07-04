@@ -47,7 +47,7 @@ bg-green-500
 	hover:bg-green-900
 `;
 
-export const LoadingMessage = tw.span`
+export const InfoMessage = tw.span`
 	my-10
   text-lg
 	text-white
